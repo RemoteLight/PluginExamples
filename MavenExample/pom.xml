@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.lars.plugins</groupId>
+	<artifactId>maven-example</artifactId>
+	<version>0.1</version>
+	<name>Maven Example</name>
+	<description>RemoteLight plugin example using maven</description>
+
+	<dependencies>
+		<!-- RemoteLight plugincore dependency using jitpack.io -->
+		<dependency>
+			<groupId>com.github.Drumber.RemoteLight</groupId>
+			<artifactId>remotelight-plugincore</artifactId>
+			<version>8d54fd8e54</version>
+		</dependency>
+	</dependencies>
+
+	<!-- JitPack repository -->
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
+</project>
