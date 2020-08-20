@@ -5,22 +5,25 @@ import de.lars.effectplaylist.Playlist;
 import de.lars.effectplaylist.PlaylistElement;
 import de.lars.remotelightclient.ui.Style;
 import de.lars.remotelightclient.ui.components.ListElement;
+import de.lars.remotelightclient.ui.panels.tools.ToolsNavListener;
 import de.lars.remotelightclient.ui.panels.tools.ToolsPanel;
 import de.lars.remotelightclient.utils.ui.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SetupPanel extends JPanel {
+public class SetupPanel extends JPanel implements ToolsNavListener {
 
     private final EffectPlaylist instance;
     private final ToolsPanel context;
     private final Playlist playlist;
+    private final PlaylistPanel playlistPanel;
     private final JPanel panelList;
     private final JPanel panelSettings;
 
-    public SetupPanel(ToolsPanel context, Playlist playlist) {
+    public SetupPanel(ToolsPanel context, Playlist playlist, PlaylistPanel playlistPanel) {
         this.context = context;
+        this.playlistPanel = playlistPanel;
         instance = EffectPlaylist.getInstance();
         if(playlist != null) {
             this.playlist = playlist;
@@ -98,10 +101,14 @@ public class SetupPanel extends JPanel {
     }
 
     private void initSettingsPanel() {
+        final int height = 40;
         JTextField fieldName = new JTextField(playlist.getId());
+        fieldName.setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
+        panelSettings.add(fieldName);
 
         JButton btnAdd = new JButton("Add");
         UiUtils.configureButton(btnAdd);
+        btnAdd.setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
         btnAdd.addActionListener(e -> {
             // TODO add element
         });
@@ -109,6 +116,7 @@ public class SetupPanel extends JPanel {
 
         JButton btnClear = new JButton("Clear");
         UiUtils.configureButton(btnClear);
+        btnClear.setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
         btnClear.addActionListener(e -> {
             // clear playlist
             playlist.getPlaylistList().clear();
@@ -120,20 +128,22 @@ public class SetupPanel extends JPanel {
         checkLoop.setBackground(panelSettings.getBackground());
         checkLoop.setForeground(Style.textColor);
         checkLoop.setSelected(playlist.isLoop());
+        checkLoop.setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
         panelSettings.add(checkLoop);
 
         panelSettings.add(Box.createVerticalGlue());
 
         JButton btnSave = new JButton("Save playlist");
-        UiUtils.configureButtonWithBorder(btnSave, Style.accent);
+        UiUtils.configureButton(btnSave);
+        btnSave.setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
         btnSave.addActionListener(e -> {
-            // TODO save and go back
+            // save and go back
             playlist.setLoop(checkLoop.isSelected());
             String newName = fieldName.getText().trim();
             if(!playlist.getId().equals(newName)) {
                 // check if id is not used
                 if(instance.getHandler().getPlaylist(newName) != null) {
-                    JOptionPane.showInternalMessageDialog(this,
+                    JOptionPane.showMessageDialog(this,
                             "The name is already in use. Please define a unique one.",
                             "Could not save playlist",
                             JOptionPane.ERROR_MESSAGE);
@@ -149,6 +159,7 @@ public class SetupPanel extends JPanel {
 
         JButton btnDelete = new JButton("Delete playlist");
         UiUtils.configureButton(btnDelete);
+        btnDelete.setMaximumSize(new Dimension(Integer.MAX_VALUE, height));
         btnDelete.addActionListener(e -> {
             // delete playlist
             instance.getHandler().removePlaylist(playlist);
@@ -157,4 +168,12 @@ public class SetupPanel extends JPanel {
         panelSettings.add(btnDelete);
     }
 
+    @Override
+    public void onBack() {
+        // update playlist panel
+        playlistPanel.updatePlaylistEntryPanels();
+    }
+
+    @Override
+    public void onShow() {}
 }

@@ -47,14 +47,14 @@ public class PlaylistPanel extends JPanel {
         for(final Playlist playlist : instance.getHandler().getAllPlaylists()) {
             ListElement el = new ListElement();
 
-            boolean activePlaylist = instance.getHandler().getActivePlaylist().getId().equals(playlist.getId());
+            boolean activePlaylist = instance.getHandler().isActive() && instance.getHandler().getActivePlaylist().getId().equals(playlist.getId());
             if(activePlaylist) {
                 el.setBorder(new CompoundBorder(el.getBorder(), BorderFactory.createLineBorder(Style.accent)));
             }
 
             JLabel lblName = new JLabel(playlist.getId());
             lblName.setForeground(Style.textColor);
-            panelPlaylistList.add(lblName);
+            el.add(lblName);
             el.add(Box.createHorizontalGlue());
 
             JButton btnEdit = new JButton("Edit");
@@ -76,7 +76,7 @@ public class PlaylistPanel extends JPanel {
             el.add(btnStart);
 
             panelPlaylistList.add(el);
-            panelPlaylistList.add(Box.createVerticalStrut(10));
+            panelPlaylistList.add(Box.createVerticalStrut(5));
         }
 
         panelPlaylistList.add(Box.createVerticalGlue());
@@ -84,7 +84,12 @@ public class PlaylistPanel extends JPanel {
         // 'Add' button
         ListElement elAdd = new ListElement();
         elAdd.add(new JLabel(Style.getFontIcon(MenuIconFont.MenuIcon.ADD)));
-        elAdd.add(new JLabel("Add playlist"));
+        elAdd.add(Box.createHorizontalStrut(5));
+
+        JLabel lblAdd = new JLabel("Add playlist");
+        lblAdd.setForeground(Style.textColor);
+        elAdd.add(lblAdd);
+
         elAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -99,8 +104,9 @@ public class PlaylistPanel extends JPanel {
      * @param playlist  the playlist to edit (set to null to create a new playlist)
      */
     private void editPlaylist(Playlist playlist) {
-        SetupPanel setupPanel = new SetupPanel(context, playlist);
-        ToolsPanelNavItem navItem = new ToolsPanelNavItem("Playlist Configuration", setupPanel);
+        SetupPanel setupPanel = new SetupPanel(context, playlist, this);
+        ToolsPanelNavItem navItem = new ToolsPanelNavItem("Playlist Configuration", setupPanel, setupPanel);
+
         context.navigateUp(navItem);
     }
 

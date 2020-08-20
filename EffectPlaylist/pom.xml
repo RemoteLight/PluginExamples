@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.github.Drumber</groupId>
             <artifactId>RemoteLight</artifactId>
-            <version>9d89df8ea5</version>
+            <version>d4c54b28ae</version>
         </dependency>
     </dependencies>
 
@@ -24,6 +24,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
