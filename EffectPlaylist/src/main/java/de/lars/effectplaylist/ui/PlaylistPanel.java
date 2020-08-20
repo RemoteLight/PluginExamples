@@ -50,7 +50,7 @@ public class PlaylistPanel extends JPanel {
 
             boolean activePlaylist = instance.getHandler().isActive() && instance.getHandler().getActivePlaylist().getId().equals(playlist.getId());
             if(activePlaylist) {
-                el.setBorder(new CompoundBorder(el.getBorder(), BorderFactory.createLineBorder(Style.accent)));
+                el.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Style.accent), el.getBorder()));
             }
 
             JLabel lblName = new JLabel(playlist.getId());
@@ -73,6 +73,7 @@ public class PlaylistPanel extends JPanel {
                     // start playlist
                     instance.getHandler().startPlaylist(playlist);
                 }
+                updatePlaylistEntryPanels();
             });
             el.add(btnStart);
 
@@ -96,6 +97,7 @@ public class PlaylistPanel extends JPanel {
             }
         });
         panelPlaylistList.add(elAdd);
+        panelPlaylistList.updateUI();
     }
 
     /**

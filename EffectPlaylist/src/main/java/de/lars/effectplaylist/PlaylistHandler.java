@@ -133,6 +133,9 @@ public class PlaylistHandler {
 
     public void removePlaylist(Playlist playlist) {
         listPlaylist.remove(playlist);
+        // erase setting data
+        sm.removeSetting(PRE_LIST_DATA + playlist.getId());
+        sm.removeSetting(PRE_BOOL_LOOP + playlist.getId());
     }
 
     public void removePlaylist(String id) {
@@ -188,6 +191,8 @@ public class PlaylistHandler {
             timer.purge();
             System.out.println(EffectPlaylist.PREFIX + "Stopped playlist " + (activePlaylist != null ? activePlaylist.getId() : "?"));
             activePlaylist = null;
+            // stop all effects
+            EffectPlaylist.getInstance().getInterface().getEffectManagerHelper().stopAll();
         }
     }
 
