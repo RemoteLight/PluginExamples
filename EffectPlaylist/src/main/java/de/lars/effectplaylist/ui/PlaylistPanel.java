@@ -29,6 +29,7 @@ public class PlaylistPanel extends JPanel {
 
         panelPlaylistList = new JPanel();
         panelPlaylistList.setBackground(Style.panelDarkBackground);
+        panelPlaylistList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panelPlaylistList.setLayout(new BoxLayout(panelPlaylistList, BoxLayout.Y_AXIS));
 
         JScrollPane scrollPane = new JScrollPane(panelPlaylistList);
@@ -78,8 +79,6 @@ public class PlaylistPanel extends JPanel {
             panelPlaylistList.add(el);
             panelPlaylistList.add(Box.createVerticalStrut(5));
         }
-
-        panelPlaylistList.add(Box.createVerticalGlue());
 
         // 'Add' button
         ListElement elAdd = new ListElement();
