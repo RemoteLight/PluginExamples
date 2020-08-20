@@ -33,7 +33,14 @@ public class EffectPlaylist extends Plugin {
         handler = new PlaylistHandler(getInterface().getSettingsManager());
         // load stored playlist (if previous stored)
         handler.loadALl();
-        System.out.println("Enabled EffectPlaylist " + instance.getPluginInfo().getValue(DefaultProperties.VERSION));
+        System.out.println(PREFIX + "Enabled EffectPlaylist " + instance.getPluginInfo().getValue(DefaultProperties.VERSION));
+    }
+
+    @Override
+    public void onDisable() {
+        System.out.println(PREFIX + "Saving all playlists...");
+        handler.stopPlaylist();
+        handler.saveAll();
     }
 
     public boolean isLoaded() {

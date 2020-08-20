@@ -1,5 +1,7 @@
 package de.lars.effectplaylist;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.lars.remotelightcore.animation.Animation;
 import de.lars.remotelightcore.animation.AnimationManager;
 import de.lars.remotelightcore.musicsync.MusicEffect;
@@ -19,6 +21,7 @@ public class PlaylistHandler {
     /** playlist setting id of the store IDs */
     public final static String KEY_LIST_IDS = EffectPlaylist.SETTING_PRE + "playlistIds";
 
+    private final Gson gson;
     private final SettingsManager sm;
     /** a list of all playlist HashMaps (Animation name, duration) */
     private final List<Playlist> listPlaylist;
@@ -26,9 +29,9 @@ public class PlaylistHandler {
     /** current active playlist; null if none active */
     private Playlist activePlaylist;
     private final Timer timer;
-    private boolean loopPlaylist = true;
 
     public PlaylistHandler(SettingsManager sm) {
+        this.gson = new GsonBuilder().serializeNulls().create();
         this.sm = sm;
         listPlaylist = new ArrayList<Playlist>();
         timer = new Timer();
@@ -45,8 +48,7 @@ public class PlaylistHandler {
             List<String> listIDs = (List<String>) objData.getValue();
             // load all playlists
             for(String id : listIDs) {
-                String playlistID = PRE_LIST_DATA + id;
-                List<PlaylistElement> listPlaylistElements = loadPlaylist(playlistID);
+                List<PlaylistElement> listPlaylistElements = loadPlaylist(id);
 
                 if(listPlaylistElements == null) {
                     System.err.println(EffectPlaylist.PREFIX + "Could not load stored playlist for ID '" + id + "'.");
@@ -70,12 +72,14 @@ public class PlaylistHandler {
      * @param id    the id or name of the playlist
      * @return      the hash map (playlist) or null
      */
-    @SuppressWarnings("unchecked")
     public List<PlaylistElement> loadPlaylist(String id) {
         SettingObject settingPlaylist = sm.getSettingObject(PRE_LIST_DATA + id);
         Object objData = settingPlaylist.getValue();
-        if(objData instanceof List) {
-            return (List<PlaylistElement>) objData;
+        if(objData instanceof String) {
+            // deserialize json data using Gson
+            String jsonData = (String) objData;
+            PlaylistElement[] array = gson.fromJson(jsonData, PlaylistElement[].class);
+            return Arrays.asList(array);
         }
         return null;
     }
@@ -88,16 +92,24 @@ public class PlaylistHandler {
         // store all playlist settings IDs in a list
         List<String> listIDs = new ArrayList<String>();
         for(Playlist playlist : listPlaylist) {
+            // add playlist ID to list
             listIDs.add(playlist.getId());
+
+            // serialize data to json using Gson
+            PlaylistElement[] dataArray = playlist.getPlaylistList().toArray(new PlaylistElement[0]);
+            String jsonData = gson.toJson(dataArray);
+
             // store playlist data
             SettingObject settingPlaylist = sm.addSetting(
-                    new SettingObject(PRE_LIST_DATA + playlist.getId(), "Playlist dara", playlist.getPlaylistList()));
-            settingPlaylist.setValue(playlist.getPlaylistList());
+                    new SettingObject(PRE_LIST_DATA + playlist.getId(), "Playlist data", jsonData));
+            settingPlaylist.setValue(jsonData);
+
             // store loop data
             SettingBoolean settingLoop = sm.addSetting(
                     new SettingBoolean(PRE_BOOL_LOOP + playlist.getId(), "Playlist Loop mode", SettingsManager.SettingCategory.Intern, null, playlist.isLoop()));
             settingLoop.setValue(playlist.isLoop());
         }
+        // store all playlist IDs
         SettingObject settingIDs = sm.addSetting(new SettingObject(KEY_LIST_IDS, "Playlist IDs", listIDs));
         settingIDs.setValue(listIDs);
     }
@@ -166,6 +178,7 @@ public class PlaylistHandler {
         if(playlist != null) {
             activePlaylist = playlist;
             timer.schedule(new PlaylistTask(), 0);
+            System.out.println(EffectPlaylist.PREFIX + "Started playlist " + activePlaylist.getId());
         }
     }
 
@@ -173,6 +186,7 @@ public class PlaylistHandler {
         if(isActive()) {
             timer.cancel();
             timer.purge();
+            System.out.println(EffectPlaylist.PREFIX + "Stopped playlist " + (activePlaylist != null ? activePlaylist.getId() : "?"));
             activePlaylist = null;
         }
     }
@@ -215,13 +229,13 @@ public class PlaylistHandler {
                 // plan next element
                 boolean finished = activePlaylist.nextIndex();
                 // if this was the last element and loop is disabled, then stop
-                if(finished && !loopPlaylist) {
+                if(finished && !activePlaylist.isLoop()) {
                     stopPlaylist();
                     return;
                 }
 
                 // schedule new task
-                timer.schedule(new PlaylistTask(), element.getDuration());
+                timer.schedule(new PlaylistTask(), element.getDuration()*1000);
             }
         }
 
