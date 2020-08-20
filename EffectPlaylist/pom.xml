@@ -9,14 +9,28 @@
     <version>1.0</version>
     <name>EffectPlaylist</name>
     <description>Create a playlist of animations and other effects.</description>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
             <groupId>com.github.Drumber</groupId>
             <artifactId>RemoteLight</artifactId>
-            <version>9959d79c65</version>
+            <version>9d89df8ea5</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>

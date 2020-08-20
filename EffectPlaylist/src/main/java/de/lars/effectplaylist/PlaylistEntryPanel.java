@@ -1,8 +1,8 @@
 package de.lars.effectplaylist;
 
 import de.lars.effectplaylist.ui.PlaylistPanel;
+import de.lars.remotelightclient.ui.panels.tools.ToolsPanel;
 import de.lars.remotelightclient.ui.panels.tools.ToolsPanelEntry;
-import de.lars.remotelightcore.settings.SettingsManager;
 
 import javax.swing.*;
 
@@ -16,8 +16,8 @@ public class PlaylistEntryPanel extends ToolsPanelEntry {
     }
 
     @Override
-    public JPanel getMenuPanel() {
-        return new PlaylistPanel(EffectPlaylist.getInstance());
+    public JPanel getMenuPanel(ToolsPanel context) {
+        return new PlaylistPanel(context, EffectPlaylist.getInstance());
     }
 
 }

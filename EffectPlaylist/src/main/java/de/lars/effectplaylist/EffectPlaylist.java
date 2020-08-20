@@ -11,20 +11,7 @@ public class EffectPlaylist extends Plugin {
     public final static String PREFIX = "[EffectPlaylist] ";
 
     private static EffectPlaylist instance;
-    private final PlaylistHandler handler;
-
-    public EffectPlaylist() {
-        instance = EffectPlaylist.this;
-        // create entry of tools panel
-        PlaylistEntryPanel entry = new PlaylistEntryPanel();
-        // register entry
-        ToolsPanel.getEntryList().add(entry);
-
-        // create playlist handler
-        handler = new PlaylistHandler(getInterface().getSettingsManager());
-        // load stored playlist (if previous stored)
-        handler.loadALl();
-    }
+    private PlaylistHandler handler;
 
     public static EffectPlaylist getInstance() {
         return instance;
@@ -36,7 +23,16 @@ public class EffectPlaylist extends Plugin {
 
     @Override
     public void onEnable() {
-        new EffectPlaylist();
+        instance = this;
+        // create entry of tools panel
+        PlaylistEntryPanel entry = new PlaylistEntryPanel();
+        // register entry
+        ToolsPanel.getEntryList().add(entry);
+
+        // create playlist handler
+        handler = new PlaylistHandler(getInterface().getSettingsManager());
+        // load stored playlist (if previous stored)
+        handler.loadALl();
         System.out.println("Enabled EffectPlaylist " + instance.getPluginInfo().getValue(DefaultProperties.VERSION));
     }
 

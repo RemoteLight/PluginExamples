@@ -2,16 +2,23 @@ package de.lars.effectplaylist;
 
 import de.lars.remotelightcore.animation.Animation;
 import de.lars.remotelightcore.animation.AnimationManager;
+import de.lars.remotelightcore.musicsync.MusicEffect;
+import de.lars.remotelightcore.musicsync.MusicSyncManager;
 import de.lars.remotelightcore.settings.SettingsManager;
+import de.lars.remotelightcore.settings.types.SettingBoolean;
 import de.lars.remotelightcore.settings.types.SettingObject;
 
-import java.sql.Time;
 import java.util.*;
 
 public class PlaylistHandler {
 
-    /** playlist setting id prefix */
-    private final String playlistKeyPre = EffectPlaylist.SETTING_PRE + "playlist.";
+    /** playlist setting id prefix of the stored List */
+    public final static String PRE_LIST_DATA = EffectPlaylist.SETTING_PRE + "playlist.";
+    /** playlist setting id prefix of the loop boolean setting */
+    public final static String PRE_BOOL_LOOP = EffectPlaylist.SETTING_PRE + "loop.";
+    /** playlist setting id of the store IDs */
+    public final static String KEY_LIST_IDS = EffectPlaylist.SETTING_PRE + "playlistIds";
+
     private final SettingsManager sm;
     /** a list of all playlist HashMaps (Animation name, duration) */
     private final List<Playlist> listPlaylist;
@@ -33,22 +40,25 @@ public class PlaylistHandler {
      */
     @SuppressWarnings("unchecked")
     public void loadALl() {
-        SettingObject objData = sm.getSettingObject(EffectPlaylist.SETTING_PRE + ".playlistIds");
+        SettingObject objData = sm.getSettingObject(KEY_LIST_IDS);
         if(objData != null && objData.getValue() instanceof List) {
             List<String> listIDs = (List<String>) objData.getValue();
             // load all playlists
             for(String id : listIDs) {
-                String playlistID = playlistKeyPre + id;
-                LinkedHashMap<String, Integer> mapPlaylist = loadPlaylist(playlistID);
+                String playlistID = PRE_LIST_DATA + id;
+                List<PlaylistElement> listPlaylistElements = loadPlaylist(playlistID);
 
-                if(mapPlaylist == null) {
+                if(listPlaylistElements == null) {
                     System.err.println(EffectPlaylist.PREFIX + "Could not load stored playlist for ID '" + id + "'.");
                     continue;
                 }
 
                 // create playlist instance
                 Playlist playlist = new Playlist(id);
-                playlist.getPlaylistMap().putAll(mapPlaylist);
+                playlist.getPlaylistList().addAll(listPlaylistElements);
+                SettingBoolean settingLoop = sm.getSetting(SettingBoolean.class, PRE_BOOL_LOOP + id);
+                if(settingLoop != null)
+                    playlist.setLoop(settingLoop.getValue());
                 listPlaylist.add(playlist);
             }
         }
@@ -61,11 +71,11 @@ public class PlaylistHandler {
      * @return      the hash map (playlist) or null
      */
     @SuppressWarnings("unchecked")
-    public LinkedHashMap<String, Integer> loadPlaylist(String id) {
-        SettingObject settingPlaylist = sm.getSettingObject(playlistKeyPre + id);
+    public List<PlaylistElement> loadPlaylist(String id) {
+        SettingObject settingPlaylist = sm.getSettingObject(PRE_LIST_DATA + id);
         Object objData = settingPlaylist.getValue();
-        if(objData instanceof LinkedHashMap) {
-            return (LinkedHashMap<String, Integer>) objData;
+        if(objData instanceof List) {
+            return (List<PlaylistElement>) objData;
         }
         return null;
     }
@@ -80,10 +90,15 @@ public class PlaylistHandler {
         for(Playlist playlist : listPlaylist) {
             listIDs.add(playlist.getId());
             // store playlist data
-            SettingObject settingPlaylist = sm.addSetting(new SettingObject(playlistKeyPre + playlist.getId(), "Playlist dara", playlist.getPlaylistMap()));
-            settingPlaylist.setValue(playlist.getPlaylistMap());
+            SettingObject settingPlaylist = sm.addSetting(
+                    new SettingObject(PRE_LIST_DATA + playlist.getId(), "Playlist dara", playlist.getPlaylistList()));
+            settingPlaylist.setValue(playlist.getPlaylistList());
+            // store loop data
+            SettingBoolean settingLoop = sm.addSetting(
+                    new SettingBoolean(PRE_BOOL_LOOP + playlist.getId(), "Playlist Loop mode", SettingsManager.SettingCategory.Intern, null, playlist.isLoop()));
+            settingLoop.setValue(playlist.isLoop());
         }
-        SettingObject settingIDs = sm.addSetting(new SettingObject(EffectPlaylist.SETTING_PRE + ".playlistIds", "Playlist IDs", listIDs));
+        SettingObject settingIDs = sm.addSetting(new SettingObject(KEY_LIST_IDS, "Playlist IDs", listIDs));
         settingIDs.setValue(listIDs);
     }
 
@@ -171,20 +186,31 @@ public class PlaylistHandler {
         @Override
         public void run() {
             if(activePlaylist != null) {
-                Map.Entry<String, Integer> element = activePlaylist.getCurrentElement();
-                String animation = element.getKey();
-                int duration = element.getValue();
+                PlaylistElement element = activePlaylist.getCurrentElement();
 
-                AnimationManager manager = EffectPlaylist.getInstance().getInterface().getAnimationManager();
-                // find animation
-                Animation ani = findAnimation(manager.getAnimations(), animation);
-                // if animation can not be found, then skip and go to next element
-                if(ani == null) {
-                    timer.schedule(new PlaylistTask(), 0);
-                    return;
+                if(element.getType() == PlaylistElement.Type.Animation) {
+                    AnimationManager manager = EffectPlaylist.getInstance().getInterface().getAnimationManager();
+                    // find animation
+                    Animation ani = findAnimation(manager.getAnimations(), element.getName());
+                    // if animation can not be found, then skip and go to next element
+                    if (ani == null) {
+                        timer.schedule(new PlaylistTask(), 0);
+                        return;
+                    }
+                    // start animation
+                    manager.start(ani);
+                } else {
+                    MusicSyncManager manager = EffectPlaylist.getInstance().getInterface().getMusicSyncManager();
+                    // find music effect
+                    MusicEffect effect = findMusicEffect(manager.getMusicEffects(), element.getName());
+                    // if effect can not be found, then skip and go to next element
+                    if (effect == null) {
+                        timer.schedule(new PlaylistTask(), 0);
+                        return;
+                    }
+                    // start music effect
+                    manager.start(effect);
                 }
-                // start animation
-                manager.start(ani);
 
                 // plan next element
                 boolean finished = activePlaylist.nextIndex();
@@ -195,7 +221,7 @@ public class PlaylistHandler {
                 }
 
                 // schedule new task
-                timer.schedule(new PlaylistTask(), duration);
+                timer.schedule(new PlaylistTask(), element.getDuration());
             }
         }
 
@@ -203,6 +229,14 @@ public class PlaylistHandler {
             for(Animation a : animations) {
                 if(a.getName().equals(name))
                     return a;
+            }
+            return null;
+        }
+
+        private MusicEffect findMusicEffect(List<MusicEffect> musicEffects, String name) {
+            for(MusicEffect m : musicEffects) {
+                if(m.getName().equals(name))
+                    return m;
             }
             return null;
         }

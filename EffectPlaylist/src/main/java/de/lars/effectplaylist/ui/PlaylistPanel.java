@@ -4,6 +4,7 @@ import de.lars.effectplaylist.EffectPlaylist;
 import de.lars.effectplaylist.Playlist;
 import de.lars.remotelightclient.ui.Style;
 import de.lars.remotelightclient.ui.components.ListElement;
+import de.lars.remotelightclient.ui.panels.tools.ToolsPanel;
 import de.lars.remotelightclient.ui.panels.tools.ToolsPanelNavItem;
 import de.lars.remotelightclient.utils.ui.MenuIconFont;
 
@@ -15,11 +16,13 @@ import java.awt.event.MouseEvent;
 
 public class PlaylistPanel extends JPanel {
 
-    private  EffectPlaylist context;
+    private final ToolsPanel context;
+    private final EffectPlaylist instance;
     private final JPanel panelPlaylistList;
 
-    public PlaylistPanel(EffectPlaylist context) {
+    public PlaylistPanel(ToolsPanel context, EffectPlaylist instance) {
         this.context = context;
+        this.instance = instance;
         setBackground(Style.panelBackground);
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -41,10 +44,10 @@ public class PlaylistPanel extends JPanel {
 
     public void updatePlaylistEntryPanels() {
         panelPlaylistList.removeAll();
-        for(final Playlist playlist : context.getHandler().getAllPlaylists()) {
+        for(final Playlist playlist : instance.getHandler().getAllPlaylists()) {
             ListElement el = new ListElement();
 
-            boolean activePlaylist = context.getHandler().getActivePlaylist().getId().equals(playlist.getId());
+            boolean activePlaylist = instance.getHandler().getActivePlaylist().getId().equals(playlist.getId());
             if(activePlaylist) {
                 el.setBorder(new CompoundBorder(el.getBorder(), BorderFactory.createLineBorder(Style.accent)));
             }
@@ -64,10 +67,10 @@ public class PlaylistPanel extends JPanel {
             btnStart.addActionListener(e -> {
                 if(activePlaylist) {
                     // stop playlist
-                    context.getHandler().stopPlaylist();
+                    instance.getHandler().stopPlaylist();
                 } else {
                     // start playlist
-                    context.getHandler().startPlaylist(playlist);
+                    instance.getHandler().startPlaylist(playlist);
                 }
             });
             el.add(btnStart);
@@ -96,12 +99,12 @@ public class PlaylistPanel extends JPanel {
      * @param playlist  the playlist to edit (set to null to create a new playlist)
      */
     private void editPlaylist(Playlist playlist) {
-        SetupPanel setupPanel = new SetupPanel(playlist);
+        SetupPanel setupPanel = new SetupPanel(context, playlist);
         ToolsPanelNavItem navItem = new ToolsPanelNavItem("Playlist Configuration", setupPanel);
-        // TODO navigate up in tools panel
+        context.navigateUp(navItem);
     }
 
-    private void configureBorderlessButton(JButton btn) {
+    public static void configureBorderlessButton(JButton btn) {
         btn.setContentAreaFilled(false);
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);

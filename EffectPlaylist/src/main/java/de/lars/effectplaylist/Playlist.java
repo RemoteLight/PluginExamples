@@ -1,22 +1,22 @@
 package de.lars.effectplaylist;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Playlist {
 
-    /** playlist HashMap (Animation name, duration) */
-    private final LinkedHashMap<String, Integer> playlistMap;
+    /** playlist List */
+    private final List<PlaylistElement> playlistList;
     /** playlist id / name */
     private String id;
+    /** shuffle mode */
+    private boolean loop = true;
 
     private int lastIndex = 0;
 
     public Playlist(String id) {
         this.id = id;
-        playlistMap = new LinkedHashMap<String, Integer>();
+        playlistList = new ArrayList<PlaylistElement>();
     }
 
     public String getId() {
@@ -27,8 +27,16 @@ public class Playlist {
         this.id = id;
     }
 
-    public LinkedHashMap<String, Integer> getPlaylistMap() {
-        return playlistMap;
+    public boolean isLoop() {
+        return loop;
+    }
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
+    }
+
+    public List<PlaylistElement> getPlaylistList() {
+        return playlistList;
     }
 
     /**
@@ -37,7 +45,7 @@ public class Playlist {
      *          false if there is a next element in the playlist
      */
     public boolean nextIndex() {
-        if(++lastIndex >= playlistMap.size()) {
+        if(++lastIndex >= playlistList.size()) {
             lastIndex = 0;
             return true;
         }
@@ -54,11 +62,10 @@ public class Playlist {
 
     /**
      * Get the map entry of the current index.
-     * @return  the map entry on the current position
+     * @return  the playlist entry on the current position
      */
-    public Map.Entry<String, Integer> getCurrentElement() {
-        List<Map.Entry<String, Integer>> list = new ArrayList<>(playlistMap.entrySet());
-        return list.get(lastIndex);
+    public PlaylistElement getCurrentElement() {
+        return playlistList.get(lastIndex);
     }
 
 }
