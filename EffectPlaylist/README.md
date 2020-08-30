@@ -7,10 +7,13 @@ Create a playlist with Animations and MusicEffects to achieve an automatic effec
 - init maven project: `mvn install`
 
 ## Run plugin
-- follow the steps above
-- build jar file: `mvn clean install` or [download here](https://github.com/RemoteLight/PluginExamples/raw/master/EffectPlaylist/target/EffectPlaylist-1.0.jar)
+If you only want to download the plugin: [download here](https://github.com/RemoteLight/PluginExamples/raw/master/EffectPlaylist/target/EffectPlaylist-1.0.jar) and put it in the `%homepath%/.RemoteLight/plugins` folder (or start RemoteLight, go to Tools > Plugins and click 'Open plugins folder')
+
+... or build it yourself:
+- follow the [steps above](#build)
+- build jar file: `mvn clean package`
 - copy `EffectPlaylist-1.0.jar` from `/EffectPlaylist/target` to `%homepath%/.RemoteLight/plugins`
-- run RemoteLight
+- start RemoteLight
 
 ## What does this plugin do?
 It adds the functionality to [RemoteLight](https://github.com/Drumber/RemoteLight) to create your own scheduled effect sequences.  
