@@ -23,3 +23,6 @@ In a playlist you can add Animations and MusicEffects and set the duration how l
 To start a playlist go to the playlist panel and click on the start button at the desired playlist entry.
 
 **Note:** You have to set up and activate an output first. In case you are using MusicEffects, the audio input should be configured in the MusicSync menu panel.
+
+## Screenshot
+![screenshot](https://user-images.githubusercontent.com/29163322/91655569-d7de4300-eab1-11ea-9a55-175a1455fb81.png)
