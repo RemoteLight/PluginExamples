@@ -11,15 +11,10 @@
 
 	<dependencies>
 		<!-- RemoteLight plugincore dependency using jitpack.io -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.github.Drumber.RemoteLight</groupId>
 			<artifactId>remotelight-plugincore</artifactId>
-			<version>8d54fd8e54</version>
-		</dependency> -->
-		<dependency>
-			<groupId>de.lars</groupId>
-			<artifactId>remotelight-plugincore</artifactId>
-			<version>0.2.4</version>
+			<version>v0.2.4-rc2</version>
 		</dependency>
 	</dependencies>
 

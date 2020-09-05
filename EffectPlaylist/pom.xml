@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.github.Drumber</groupId>
             <artifactId>RemoteLight</artifactId>
-            <version>d4c54b28ae</version>
+            <version>v0.2.4-rc2</version>
         </dependency>
     </dependencies>
 
