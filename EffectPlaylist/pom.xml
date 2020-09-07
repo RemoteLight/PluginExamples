@@ -6,7 +6,7 @@
 
     <groupId>de.lars</groupId>
     <artifactId>EffectPlaylist</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>EffectPlaylist</name>
     <description>Create a playlist of animations and other effects.</description>
     <packaging>jar</packaging>

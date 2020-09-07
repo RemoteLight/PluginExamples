@@ -283,9 +283,13 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         root.add(spinnerDuration, c);
 
         // create dialog
+        Object tmpBgr = UIManager.get("Panel.background"); // save default UI value
+        UIManager.put("Panel.background", Style.panelBackground); // set custom panel background
         JOptionPane pane = new JOptionPane(root, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new String[] {"Select"});
+        pane.setBackground(Style.panelBackground);
         JDialog dialog = pane.createDialog("Add new playlist item");
-        dialog.show();
+        UIManager.put("Panel.background", tmpBgr); // reset to default value
+        dialog.setVisible(true);
         dialog.dispose();
 
         // return selection as playlist element
