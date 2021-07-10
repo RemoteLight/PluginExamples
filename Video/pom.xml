@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.github.drumber</groupId>
+	<artifactId>remotelight-video</artifactId>
+	<version>0.1</version>
+
+	<properties>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<!-- RemoteLight plugincore dependency using jitpack.io -->
+		<dependency>
+			<groupId>com.github.Drumber</groupId>
+			<artifactId>RemoteLight</artifactId>
+			<version>87ba01d206</version>
+		</dependency>
+		<!-- OpenCV -->
+		<dependency>
+			<groupId>org.bytedeco</groupId>
+			<artifactId>javacv-platform</artifactId>
+			<version>1.5.5</version>
+		</dependency>
+	</dependencies>
+
+	<!-- JitPack repository -->
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+</project>
