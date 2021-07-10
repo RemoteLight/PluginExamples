@@ -17,7 +17,8 @@
 		<dependency>
 			<groupId>com.github.Drumber</groupId>
 			<artifactId>RemoteLight</artifactId>
-			<version>87ba01d206</version>
+			<version>d6ed0e6189</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- OpenCV -->
 		<dependency>
@@ -34,4 +35,30 @@
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<configuration>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin> <artifactId>maven-assembly-plugin</artifactId> <version>3.3.0</version> 
+				<configuration> <descriptorRefs> <descriptorRef>jar-with-dependencies</descriptorRef> 
+				</descriptorRefs> </configuration> <executions> <execution> <id>make-assembly</id> 
+				<phase>package</phase> <goals> <goal>single</goal> </goals> </execution> 
+				</executions> </plugin> -->
+		</plugins>
+	</build>
+
 </project>
