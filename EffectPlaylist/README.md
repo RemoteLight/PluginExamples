@@ -7,7 +7,7 @@ Create a playlist with Animations and MusicEffects to achieve an automatic effec
 - init maven project: `mvn install`
 
 ## Run plugin
-If you only want to download the plugin: [download here](https://github.com/RemoteLight/PluginExamples/raw/master/EffectPlaylist/target/EffectPlaylist-1.1.jar) and put it in the `%homepath%/.RemoteLight/plugins` folder (or start RemoteLight, go to Tools > Plugins and click 'Open plugins folder')
+If you only want to download the plugin: [download here](https://github.com/RemoteLight/PluginExamples/raw/master/EffectPlaylist/target/EffectPlaylist-1.2.jar) and put it in the `%homepath%/.RemoteLight/plugins` folder (or start RemoteLight, go to Tools > Plugins and click 'Open plugins folder')
 
 ... or build it yourself:
 - follow the [steps above](#build)

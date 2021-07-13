@@ -1,20 +1,26 @@
 package de.lars.effectplaylist.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.*;
+
 import de.lars.effectplaylist.EffectPlaylist;
 import de.lars.effectplaylist.Playlist;
 import de.lars.effectplaylist.PlaylistElement;
-import de.lars.remotelightclient.ui.Style;
 import de.lars.remotelightclient.ui.components.ListElement;
 import de.lars.remotelightclient.ui.panels.tools.ToolsNavListener;
 import de.lars.remotelightclient.ui.panels.tools.ToolsPanel;
-import de.lars.remotelightclient.utils.ui.UiUtils;
 import de.lars.remotelightcore.animation.Animation;
 import de.lars.remotelightcore.animation.AnimationManager;
 import de.lars.remotelightcore.musicsync.MusicEffect;
 import de.lars.remotelightcore.musicsync.MusicSyncManager;
-
-import javax.swing.*;
-import java.awt.*;
+import de.lars.remotelightplugincompat.StyleCompat;
+import de.lars.remotelightplugincompat.UiUtilsCompat;
 
 public class SetupPanel extends JPanel implements ToolsNavListener {
 
@@ -40,11 +46,11 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
                     this.playlist.setId("Playlist #" + (int) (Math.random() * 1000.0));
             } while (!added);
         }
-        setBackground(Style.panelBackground);
+        setBackground(StyleCompat.panelBackground());
         setLayout(new BorderLayout());
 
         panelList = new JPanel();
-        panelList.setBackground(Style.panelDarkBackground);
+        panelList.setBackground(StyleCompat.panelDarkBackground());
         panelList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panelList.setLayout(new BoxLayout(panelList, BoxLayout.Y_AXIS));
 
@@ -57,7 +63,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         add(scrollPane, BorderLayout.CENTER);
 
         panelSettings = new JPanel();
-        panelSettings.setBackground(Style.panelBackground);
+        panelSettings.setBackground(StyleCompat.panelBackground());
         panelSettings.setLayout(new BoxLayout(panelSettings, BoxLayout.Y_AXIS));
         add(panelSettings, BorderLayout.EAST);
 
@@ -74,17 +80,17 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
             ListElement el = new ListElement();
 
             JLabel lblName = new JLabel(item.getName());
-            lblName.setForeground(Style.textColor);
+            lblName.setForeground(StyleCompat.textColor());
             el.add(lblName);
             el.add(Box.createHorizontalStrut(5));
 
             JLabel lblType = new JLabel(item.getType().name());
-            lblType.setForeground(Style.textColorDarker);
+            lblType.setForeground(StyleCompat.textColorDarker());
             el.add(lblType);
             el.add(Box.createHorizontalStrut(5));
 
             JLabel lblDuration = new JLabel("(" + item.getDuration() + " sec)");
-            lblDuration.setForeground(Style.textColorDarker);
+            lblDuration.setForeground(StyleCompat.textColorDarker());
             el.add(lblDuration);
             el.add(Box.createHorizontalGlue());
 
@@ -142,7 +148,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         panelSettings.add(fieldName);
 
         JButton btnAdd = new JButton("Add Effect");
-        UiUtils.configureButton(btnAdd);
+        UiUtilsCompat.configureButton(btnAdd);
         btnAdd.setMaximumSize(max);
         btnAdd.setPreferredSize(min);
         btnAdd.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -157,7 +163,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         panelSettings.add(btnAdd);
 
         JButton btnClear = new JButton("Clear");
-        UiUtils.configureButton(btnClear);
+        UiUtilsCompat.configureButton(btnClear);
         btnClear.setMaximumSize(max);
         btnClear.setPreferredSize(min);
         btnClear.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -170,7 +176,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
 
         JCheckBox checkLoop = new JCheckBox("Loop");
         checkLoop.setBackground(panelSettings.getBackground());
-        checkLoop.setForeground(Style.textColor);
+        checkLoop.setForeground(StyleCompat.textColor());
         checkLoop.setSelected(playlist.isLoop());
         checkLoop.setMaximumSize(max);
         checkLoop.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -179,7 +185,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         panelSettings.add(Box.createVerticalGlue());
 
         JButton btnSave = new JButton("Save playlist");
-        UiUtils.configureButton(btnSave);
+        UiUtilsCompat.configureButton(btnSave);
         btnSave.setMaximumSize(max);
         btnSave.setPreferredSize(min);
         btnSave.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -205,7 +211,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         panelSettings.add(btnSave);
 
         JButton btnDelete = new JButton("Delete playlist");
-        UiUtils.configureButton(btnDelete);
+        UiUtilsCompat.configureButton(btnDelete);
         btnDelete.setMaximumSize(max);
         btnDelete.setPreferredSize(min);
         btnDelete.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -231,7 +237,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         String[] musicEffects = musicManager.getMusicEffects().stream().map(MusicEffect::getName).toArray(String[]::new);
 
         JPanel root = new JPanel();
-        root.setBackground(Style.panelBackground);
+        root.setBackground(StyleCompat.panelBackground());
         root.setLayout(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
@@ -246,7 +252,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         comboEffects.setMaximumRowCount(10);
 
         JLabel lblType = new JLabel("Effect type");
-        lblType.setForeground(Style.textColor);
+        lblType.setForeground(StyleCompat.textColor());
         root.add(lblType, c);
 
         JComboBox<PlaylistElement.Type> comboType = new JComboBox<>();
@@ -262,7 +268,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         root.add(comboType, c);
 
         JLabel lblEffect = new JLabel("Effect");
-        lblEffect.setForeground(Style.textColor);
+        lblEffect.setForeground(StyleCompat.textColor());
         c.gridx = 0;
         c.gridy = 1;
         root.add(lblEffect, c);
@@ -272,7 +278,7 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
         root.add(comboEffects, c);
 
         JLabel lblDuration = new JLabel("Duration (sec)");
-        lblDuration.setForeground(Style.textColor);
+        lblDuration.setForeground(StyleCompat.textColor());
         c.gridx = 0;
         c.gridy = 2;
         root.add(lblDuration, c);
@@ -284,9 +290,9 @@ public class SetupPanel extends JPanel implements ToolsNavListener {
 
         // create dialog
         Object tmpBgr = UIManager.get("Panel.background"); // save default UI value
-        UIManager.put("Panel.background", Style.panelBackground); // set custom panel background
+        UIManager.put("Panel.background", StyleCompat.panelBackground()); // set custom panel background
         JOptionPane pane = new JOptionPane(root, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new String[] {"Select"});
-        pane.setBackground(Style.panelBackground);
+        pane.setBackground(StyleCompat.panelBackground());
         JDialog dialog = pane.createDialog("Add new playlist item");
         UIManager.put("Panel.background", tmpBgr); // reset to default value
         dialog.setVisible(true);

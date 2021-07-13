@@ -1,5 +1,21 @@
 package de.lars.effectplaylist.ui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.CompoundBorder;
+
 import de.lars.effectplaylist.EffectPlaylist;
 import de.lars.effectplaylist.Playlist;
 import de.lars.remotelightclient.ui.Style;
@@ -7,12 +23,7 @@ import de.lars.remotelightclient.ui.components.ListElement;
 import de.lars.remotelightclient.ui.panels.tools.ToolsPanel;
 import de.lars.remotelightclient.ui.panels.tools.ToolsPanelNavItem;
 import de.lars.remotelightclient.utils.ui.MenuIconFont;
-
-import javax.swing.*;
-import javax.swing.border.CompoundBorder;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import de.lars.remotelightplugincompat.StyleCompat;
 
 public class PlaylistPanel extends JPanel {
 
@@ -23,12 +34,12 @@ public class PlaylistPanel extends JPanel {
     public PlaylistPanel(ToolsPanel context, EffectPlaylist instance) {
         this.context = context;
         this.instance = instance;
-        setBackground(Style.panelBackground);
+        setBackground(StyleCompat.panelBackground());
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         panelPlaylistList = new JPanel();
-        panelPlaylistList.setBackground(Style.panelDarkBackground);
+        panelPlaylistList.setBackground(StyleCompat.panelDarkBackground());
         panelPlaylistList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         panelPlaylistList.setLayout(new BoxLayout(panelPlaylistList, BoxLayout.Y_AXIS));
 
@@ -50,11 +61,11 @@ public class PlaylistPanel extends JPanel {
 
             boolean activePlaylist = instance.getHandler().isActive() && instance.getHandler().getActivePlaylist().getId().equals(playlist.getId());
             if(activePlaylist) {
-                el.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Style.accent), el.getBorder()));
+                el.setBorder(new CompoundBorder(BorderFactory.createLineBorder(StyleCompat.accent()), el.getBorder()));
             }
 
             JLabel lblName = new JLabel(playlist.getId());
-            lblName.setForeground(Style.textColor);
+            lblName.setForeground(StyleCompat.textColor());
             el.add(lblName);
             el.add(Box.createHorizontalGlue());
 
@@ -87,7 +98,7 @@ public class PlaylistPanel extends JPanel {
         elAdd.add(Box.createHorizontalStrut(5));
 
         JLabel lblAdd = new JLabel("Add playlist");
-        lblAdd.setForeground(Style.textColor);
+        lblAdd.setForeground(StyleCompat.textColor());
         elAdd.add(lblAdd);
 
         elAdd.addMouseListener(new MouseAdapter() {
@@ -118,7 +129,7 @@ public class PlaylistPanel extends JPanel {
         btn.setFocusable(true);
         btn.setOpaque(true);
         btn.setBackground(null);
-        btn.setForeground(Style.textColor);
+        btn.setForeground(StyleCompat.textColor());
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
